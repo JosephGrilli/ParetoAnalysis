@@ -225,7 +225,7 @@ if(!is.null(seeded)){
   } else {r <- n*HillEstimator}
   r <- min(r, n-1) # Condition that Hill Estimator must remove the smallest observation so that gamma = value[r+1] is defined. Alternatively, could skip the Hill Estimator or add an extra "gamma" observation at value[r+1] to replicate non-adjusted form.
 
-  res <- Pfunction(x=simu$Value,w=simu$Weights,r=n-1)
+  res <- Pfunction(x=simu$Value,w=simu$Weights,r=r)
 
   alpha.pt1.hat2 <- res["alpha"]
   gamma.pt1.hat2 <- res["gamma"]
@@ -233,7 +233,7 @@ if(!is.null(seeded)){
   logL1 <- sum(simu$Weights)*log(alpha.pt1.hat2) + sum(simu$Weights)*alpha.pt1.hat2*log(gamma.pt1.hat2) - (alpha.pt1.hat2+1)*sum(simu$Weights*log(simu$Value))
   vermeulen <- lm(log(cumsum(simu$Weights) - 0.5) ~ log(simu$Value))[1]  # Vermeulen (2014) alpha estimate
 
-  Pt1Sandwich <- SandwichMaker(simu$Value, simu$Weights, expression(w*(log(alpha)-log(x)+alpha*(log(gamma.pt1.hat2)-log(x)))), c("alpha"),c(alpha.pt1.hat2))
+  Pt1Sandwich <- SandwichMaker(simu$Value, simu$Weights, expression(w*(log(alpha)-log(x)+alpha*(log(eval(gamma.pt1.hat2))-log(x)))), c("alpha"),c(alpha.pt1.hat2))
 
   # # Specific bootstrap for Type 1 Analytical solution
   #   n <- length(simu$Value)
