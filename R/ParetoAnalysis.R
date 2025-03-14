@@ -337,7 +337,8 @@ GepSandwich <- HSandwichMaker(simu$Value, simu$Weights,gamma=gamma.gep.hat1,nu=N
   gamma.tp1.hat2 <- res["gamma"]
   nu <- res["nu"]
 
-  C <- (r/n)*((simu$Value[r+1])^alpha.pt1.hat2)
+  #C <- (r/n)*((simu$Value[r+1])^alpha.pt1.hat2)
+  C <- ((simu$Value)^alpha.pt1.hat2)
   p1 <- exp(-n*C*(nu^(-alpha.pt1.hat2)))
   if (p1<= ttp) {
     print("Null hypothesis rejected, Truncated Pareto type 1 in preferred to Untruncated Pareto Type 1.")
