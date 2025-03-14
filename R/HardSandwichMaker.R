@@ -193,14 +193,14 @@ HSandwichMaker <- function(x, w=1,gamma=NULL,nu=NULL, specification, truncated, 
 
   # Do this for each combination of specifications and truncation (take the expression and names from the main code, run it through here line by line, then store the output)
   if(specification=="Type 1"){
-    Vhat <- matrix(data=(eval(Score.alpha)*eval(Score.alpha)),1,1)
+    Vhat <- matrix(data=(sum(eval(Score.alpha)*eval(Score.alpha))),1,1)
     Jhat <- matrix(data=sum(-eval(Hessian.alpha.alpha)),1,1)
   }
   if(specification=="Generalized"){
-    Vhat <- matrix(data=c((eval(Score.alpha)*eval(Score.alpha)),
-                          (eval(Score.sigma)*eval(Score.alpha)),
-                          (eval(Score.alpha)*eval(Score.sigma)),
-                          (eval(Score.sigma)*eval(Score.sigma))),2,2)
+    Vhat <- matrix(data=c((sum(eval(Score.alpha)*eval(Score.alpha))),
+                          (sum(eval(Score.sigma)*eval(Score.alpha))),
+                          (sum(eval(Score.alpha)*eval(Score.sigma))),
+                          (sum(eval(Score.sigma)*eval(Score.sigma)))),2,2)
     Jhat <- matrix(data=(c(sum(-eval(Hessian.alpha.alpha)),
                            sum(-eval(Hessian.sigma.alpha)),
                            sum(-eval(Hessian.alpha.sigma)),
