@@ -29,6 +29,12 @@ HSandwichMaker <- function(x, w=1,gamma=NULL,nu=NULL, specification, truncated, 
   if (is.null(gamma)){gamma <- min(x)}
   if (is.null(nu)){nu <- max(x)}
 
+  for (i in 1:length(ParamNames)){
+    df <- ParamEstimates[i]
+    assign(ParamNames[i],df)
+    rm(df)
+  }
+
   # Calculate the score matrix (first derivatives that we are optimizing)
   # for (i in ParamNames) {
   #   df <- D(EXPRESS, i)
