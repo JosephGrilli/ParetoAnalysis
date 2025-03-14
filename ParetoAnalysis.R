@@ -234,7 +234,8 @@ if(!is.null(seeded)){
   vermeulen <- lm(log(cumsum(simu$Weights) - 0.5) ~ log(simu$Value))[1]  # Vermeulen (2014) alpha estimate
 
 
-  Pt1Sandwich <- SandwichMaker(simu$Value, simu$Weights, gamma=gamma.pt1.hat2, nu=NULL expression(w*(log(alpha)-log(x)+alpha*(log(gamma)-log(x)))) , c("alpha"),c(alpha.pt1.hat2))
+  Pt1Sandwich <- SandwichMaker(simu$Value, simu$Weights, gamma=gamma.pt1.hat2, nu=NULL, expression(w*(log(alpha)-log(x)+alpha*(log(gamma.pt1.hat2)-log(x)))), c("alpha"),c(alpha.pt1.hat2))
+
 
   # # Specific bootstrap for Type 1 Analytical solution
   #   n <- length(simu$Value)
