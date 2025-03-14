@@ -12,6 +12,7 @@
 
 HillLoopfunction <- function(x,w){
   simu <- data.frame("Value"=x,"Weights"=w)
+  n <- nrow(simu)
   df.1 <- c(2,0)
   for (r in round(n*0.05, digits=0):round(n*0.95, digits=0)) {
     alpha.pt1.hat2 <- sum(simu$Weights[1:r])/(sum(simu$Weights[1:r]*(log(simu$Value[1:r]) - log(simu$Value[r+1]))))
