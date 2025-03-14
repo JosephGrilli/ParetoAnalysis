@@ -24,5 +24,7 @@ Returns parameter estimates for alpha and sigma (and the minimum and maximum for
 Returns estimated parameters following the truncated generalised pareto form.
 }
 \examples{
+\dontrun{
 TGPfunction(Value,Weights,min(Value),max(Value),OptimSearch="Default")
+}
 }

@@ -5,6 +5,7 @@
 #' @param value The series that you wish to calculate the top x share of.
 #' @param weight The weight of observations in the data. Default = 1.
 #' @return Value of the top x share of values.
+#' @export
 #' @examples
 #' top_percent_svy(0.5,value=runif(100,0,1000),weight=round(runif(100,1,100),0))
 

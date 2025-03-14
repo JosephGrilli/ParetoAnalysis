@@ -18,5 +18,7 @@ Length of observation of x that should be used to combat bias in pareto Type 1 e
 Loops over dataset to find Hill parameter r that maximises the fit to the Pareto Type 1 distribution.
 }
 \examples{
+\dontrun{
 HillLoopfunction(Value,Weights)
+}
 }

@@ -12,8 +12,11 @@
 #' @param Sampling Method of drawing values from the uncovered region. Can be "Deterministic" (method in Zwijnenburg, Grilli & Engelbrecht, 2022) or "Inverse" for inverse sampling.
 #' @param specification Defines distribution CDF used for estimating population. Can be "Type 1" (default)  or "Generalized".
 #' @return Returns data frame with original values, weights, and the new values calculated for each observation.
+#' @export
 #' @examples
+#' \dontrun{
 #' specification(x=Value,w=Weights,id=hid,m2=m2,popu=popu,alpha=1.8,gamma=100,sigma=NA,Sampling="Inverse",specification="Type 1")
+#' }
 
 randrawSample <- function(x,w=1,id=NA,m2=NULL,popu=NULL,alpha=1.8,gamma=100,sigma=NA,Sampling="Inverse",specification="Type 1"){
   if (is.null(gamma)){gamma <- min(x)}

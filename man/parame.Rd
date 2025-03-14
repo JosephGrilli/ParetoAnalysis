@@ -30,5 +30,7 @@ Returns the preferred specification parameter estimates for alpha, gamma, sigma,
 Part of the centralised approach code, returns parameter values based on estimates and selected model form.
 }
 \examples{
+\dontrun{
 parame(output.estimates=output.estimates,specification="Type 1",top.trunc=TRUE,calibrate.ALPHA=NULL,calibrate.SIGMA=NULL)
+}
 }

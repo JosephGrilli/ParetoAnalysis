@@ -6,8 +6,11 @@
 #' @param ksp The level of significant p-value used to test fit of data to proposed distribution. Default is 0.01.
 #' @param ttp The level of significant p-value used to test for evidence of finite upper truncation point. Default is 0.1.
 #' @return Returns the selected specification (from "Type 1" or "Generalized") and if the distribution has an upper truncation value (TRUE or FALSE)
+#' @export
 #' @examples
+#' \dontrun{
 #' modelPara(output.estimates=output.estimates,model.selection="Arms",ksp=0.01,ttp=0.1)
+#' }
 
 modelPara <- function(output.estimates,model.selection="BIC",ksp = 0.01,ttp = 0.1){
 

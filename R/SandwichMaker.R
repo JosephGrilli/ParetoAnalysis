@@ -7,8 +7,11 @@
 #' @param ParamNames The names of the parameters used in the expression. Example for generalised pareto: c("alpha", "sigma")
 #' @param ParamEstimates Estimates obtained for the parameters. Following ordering of ParamNames
 #' @return Returns confidence bands for each of the variables, and the variance-covariance matrix
+#' @export
 #' @examples
+#' \dontrun{
 #' SandwichMaker(x=Value, w=Weights, EXPRESS=expression(w(log(1/sigma)-((1+alpha)/alpha)*log((sigma+alpha*(x-gamma.gep.hat1))/sigma))), ParamNames=c("alpha", "sigma"),ParamEstimates=c(1.8,1.2))
+#' }
 
 SandwichMaker <- function(x, w=1, EXPRESS, ParamNames, ParamEstimates){
   # x: Value inputs

@@ -8,8 +8,11 @@
 #' @param sigma Value of sigma parameter in generalised pareto distribution.
 #' @param specification Defines distribution CDF used for estimating population. Can be "Type 1" (default)  or "Generalized".
 #' @return Returns a table of total population in pareto tail (including origianl values and the newly estimated m2 population), the total population of the tail (popu), and the number of added points (Lm2).
+#' @export
 #' @examples
+#' \dontrun{
 #' estimatedParetoPopFunction(x=Value,w=Weights,alpha=1.8,gamma=min(Value),sigma=1.2,specification="Generalized")
+#' }
 
 estimatedParetoPopFunction <- function(x,w,alpha,gamma=NULL,sigma=NA,specification="Type 1"){
   if (is.null(gamma)){gamma <- min(x)}

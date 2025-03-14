@@ -12,8 +12,11 @@
 #' @param specification Defines distribution CDF used for estimating population. Can be "Type 1" (default)  or "Generalized".
 #' @param loopmax Maximum number of iterations. Default is 2000.
 #' @return Returns data frame of x, w, and id adjusted to match pareto and calibration criteria.
+#' @export
 #' @examples
+#' \dontrun{
 #' calibrateSample(x=Value,w=Weight,id=NA,inputDemoName=c("Gender","Age","Employment"),inputDemo=data[,c("Gender","Age","Employment")],alpha=1.8,gamma=NULL,sigma=NA,specification="Type 1",loopmax=2000)
+#' }
 
 calibrateSample <- function(x,w=1,id=NA,inputDemoName=NULL,inputDemo=inputDemo,alpha=1.8,gamma=NULL,sigma=NA,specification="Type 1",loopmax=2000){
   if (is.null(gamma)){gamma <- min(x)}

@@ -33,5 +33,7 @@ Returns a table of total population in pareto tail (including origianl values an
 Function extrapolates the weights in proportion of CDF covered by data (m1= sum(weights)) to estimate the total population (m=m1/F(xmax)) and population of uncovered area (m2).
 }
 \examples{
+\dontrun{
 estimatedParetoPopFunction(x=Value,w=Weights,alpha=1.8,gamma=min(Value),sigma=1.2,specification="Generalized")
+}
 }

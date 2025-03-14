@@ -24,5 +24,7 @@ Returns parameter estimates for alpha and sigma (and the minimum and maximum for
 Returns estimated parameters following the truncated type 1 pareto form.
 }
 \examples{
+\dontrun{
 TPfunction(Value,Weights,min(Value),max(Value),OptimSearch="Default")
+}
 }

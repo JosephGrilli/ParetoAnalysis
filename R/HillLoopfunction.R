@@ -4,8 +4,11 @@
 #' @param x Data values used in parameter estimation.
 #' @param w Data weights used in estimation. Default = 1.
 #' @return Length of observation of x that should be used to combat bias in pareto Type 1 estimate.
+#' @export
 #' @examples
+#' \dontrun{
 #' HillLoopfunction(Value,Weights)
+#' }
 
 HillLoopfunction <- function(x,w){
   simu <- data.frame("Value"=x,"Weights"=w)

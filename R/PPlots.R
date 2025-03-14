@@ -1,8 +1,8 @@
 #' Zipf and Kolmogorov-Smirnov graphical tests for Pareto fit
 #'
 #' @description Function tests the fit of input data to a specified distribution.
-#' @param ValueEquation Single variable function defining the inverse CDF function for the distribution of interest. Used to sample data. Example for Pareto Type 1: function(x){(gamma.pt1.hat2*(1-x)^(-1/alpha.pt1.hat2))}.
-#' @param RankEquation Single variable function defining the complementary cumulative distribution function (CCDF). Used to rank x from 0 to 1.  Example for Pareto Type 1: function(x){(gamma.pt1.hat2/x)^alpha.pt1.hat2}.
+#' @param ValueEquation Single variable function defining the inverse CDF function for the distribution of interest. Used to sample data.
+#' @param RankEquation Single variable function defining the complementary cumulative distribution function (CCDF). Used to rank x from 0 to 1.
 #' @param TypeName Name of distribution.
 #' @param inputData_Values Data values you wish check to match distribution used for RankEquation.
 #' @param inputData_Weights Weights attached to data points. Default = 1.
@@ -11,9 +11,12 @@
 #' @return Returns the Kolmogorov-Smirnov test p-value. When graphs=TRUE, also returns Zipf, Kolmogorov-Smirnov, and residual plots.
 #'
 #' @import stats
+#' @export
 #'
 #' @examples
+#' \dontrun{
 #' PPlots(function(x){(gamma.pt1.hat2*(1-x)^(-1/alpha.pt1.hat2))},function(x){(gamma.pt1.hat2/x)^alpha.pt1.hat2},"Pareto Type 1",simu$Value, simu$Weights,ksp,TRUE)
+#' }
 
 # Generate Zipf and KSplots
 PPlots <- function(ValueEquation, RankEquation, TypeName=NA, inputData_Values, inputData_Weights=1, ksp= 0.01, graphs=TRUE){

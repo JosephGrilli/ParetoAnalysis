@@ -15,9 +15,9 @@ PPlots(
 )
 }
 \arguments{
-\item{ValueEquation}{Single variable function defining the inverse CDF function for the distribution of interest. Used to sample data. Example for Pareto Type 1: function(x){(gamma.pt1.hat2*(1-x)^(-1/alpha.pt1.hat2))}.}
+\item{ValueEquation}{Single variable function defining the inverse CDF function for the distribution of interest. Used to sample data.}
 
-\item{RankEquation}{Single variable function defining the complementary cumulative distribution function (CCDF). Used to rank x from 0 to 1.  Example for Pareto Type 1: function(x){(gamma.pt1.hat2/x)^alpha.pt1.hat2}.}
+\item{RankEquation}{Single variable function defining the complementary cumulative distribution function (CCDF). Used to rank x from 0 to 1.}
 
 \item{TypeName}{Name of distribution.}
 
@@ -36,5 +36,7 @@ Returns the Kolmogorov-Smirnov test p-value. When graphs=TRUE, also returns Zipf
 Function tests the fit of input data to a specified distribution.
 }
 \examples{
+\dontrun{
 PPlots(function(x){(gamma.pt1.hat2*(1-x)^(-1/alpha.pt1.hat2))},function(x){(gamma.pt1.hat2/x)^alpha.pt1.hat2},"Pareto Type 1",simu$Value, simu$Weights,ksp,TRUE)
+}
 }

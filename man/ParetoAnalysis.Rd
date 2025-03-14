@@ -99,9 +99,11 @@ Returns estimated values, variances, goodness of fit and information criterion f
 Estimates pareto values from input data (or simulated data) with option to simulate data from estimated pareto using multiple approaches.
 }
 \examples{
+\dontrun{
 ParetoAnalysis(inputValues=Value,inputWeights=Weight,id=hid)
 ParetoAnalysis(type="Type 1",trun = "Truncated")
 ParetoAnalysis(x_0 = 100, type="Type 1",trun = "Truncated", simnum=10000, upperT = 0.85, lowerT=0.15,sim.ALPHA=1.8,sim.SIGMA=1.2)
 ParetoAnalysis(inputValues=Value,inputWeights=Weight,id=hid, pre.specification="Generalized", pre.top.trunc="TRUE", calibrate.ALPHA=1.8,calibrate.SIGMA=1.2)
 ParetoAnalysis(inputValues=Value,inputWeights=Weight,id=hid,x_0="top5",method="Synths", graphs=TRUE, ksp=0.05, ttp = 0.05, HillEstimator=1, OptimSearch="Local", Sampling="Inverse", model.selection = "BIC", simulatePopulation = FALSE)
+}
 }

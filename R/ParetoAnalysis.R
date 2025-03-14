@@ -45,13 +45,16 @@
 #' @import lmtest
 #' @import ggplot2
 #' @import simPop
+#' @export
 #' 
 #' @examples
+#' \dontrun{
 #' ParetoAnalysis(inputValues=Value,inputWeights=Weight,id=hid)
 #' ParetoAnalysis(type="Type 1",trun = "Truncated")
 #' ParetoAnalysis(x_0 = 100, type="Type 1",trun = "Truncated", simnum=10000, upperT = 0.85, lowerT=0.15,sim.ALPHA=1.8,sim.SIGMA=1.2)
 #' ParetoAnalysis(inputValues=Value,inputWeights=Weight,id=hid, pre.specification="Generalized", pre.top.trunc="TRUE", calibrate.ALPHA=1.8,calibrate.SIGMA=1.2)
 #' ParetoAnalysis(inputValues=Value,inputWeights=Weight,id=hid,x_0="top5",method="Synths", graphs=TRUE, ksp=0.05, ttp = 0.05, HillEstimator=1, OptimSearch="Local", Sampling="Inverse", model.selection = "BIC", simulatePopulation = FALSE)
+#' }
 
 ParetoAnalysis <- function(inputValues = NULL, inputWeights = NULL, inputid = NULL, inputDemo = NULL, inputDemoName = NULL, x_0 = NULL, type, trun = "Untruncated", method = "RanDraw", simnum=1000, pre.specification = NULL, pre.top.trunc = NULL, graphs = FALSE, ksp = 0.01, ttp = 0.1, upperT = 0.85, lowerT=0.15, sim.ALPHA = 1.8, sim.SIGMA = 1.2, loopmax = 2000, calibrate.ALPHA=NULL, calibrate.SIGMA=NULL, HillEstimator=NULL, OptimSearch="Default", seeded=NULL, Sampling="Deterministic", model.selection = c("Arms", "Loglikelihood", "AIC", "BIC"), simulatePopulation = TRUE) {
 

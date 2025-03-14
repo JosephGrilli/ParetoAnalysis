@@ -1,12 +1,7 @@
 #' Bootstrapped variance estimates
 #'
 #' @description Calculates confidence bounds using repeated estimates of likelihood function with bootstrapped draws from dataset.
-#' @param LL  A function that specifies the (negative) log likelihood derived from the pdf. Parameters are named to make problem easier. Values are named x and weights are named w. Example for Generalised Pareto: LL <- function(param, alpha, sigma){
-#' alpha <- param[1]
-#' sigma <- param[2]
-#' logl <-  sum(w(log(1/sigma) - ((1+alpha)/alpha)log((sigma +alpha(x-gamma))/sigma)))
-#' return(-logl)
-#' }
+#' @param LL  A function that specifies the (negative) log likelihood derived from the pdf. Parameters are named to make problem easier. Values are named x and weights are named w.
 #' @param x Data values used in parameter estimation.
 #' @param w Data weights used in estimation. Default = 1.
 #' @param noParams The number of parameters being optimised over in LL (either alpha or alpha and sigma.
@@ -19,9 +14,18 @@
 #' @return Returns matrix of mean, variance, bias, and bias significance for alpha, sigma, gamma, and nu.
 #'
 #' @import stats
+#' @export
 #'
 #' @examples
+#' \dontrun{
+#' LL <- function(param, alpha, sigma){
+#' alpha <- param[1]
+#' sigma <- param[2]
+#' logl <-  sum(w(log(1/sigma) - ((1+alpha)/alpha)log((sigma +alpha(x-gamma))/sigma)))
+#' return(-logl)
+#' }
 #' bootstrapper(LL, x=Value, w=Weights, noParams=2, method="Local", loops=600, alpha=1.8, sigma=1.2, gamma=min(Value), nu=max(Value))
+#' }
 
 bootstrapper <- function(LL, x, w=1, noParams, method="Local", loops=600, alpha, sigma, gamma=NULL, nu=NULL){
   n <- length(x)

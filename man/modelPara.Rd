@@ -22,5 +22,7 @@ Returns the selected specification (from "Type 1" or "Generalized") and if the d
 Part of the centralised approach code, taking the output table to identify the model specification and whether there is upper truncation.
 }
 \examples{
+\dontrun{
 modelPara(output.estimates=output.estimates,model.selection="Arms",ksp=0.01,ttp=0.1)
+}
 }

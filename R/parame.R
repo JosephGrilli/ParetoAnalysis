@@ -7,8 +7,11 @@
 #' @param calibrate.ALPHA Used to set alpha parameter if not using results. Default is NULL.
 #' @param calibrate.SIGMA Used to set sigma parameter if not using results. Default is NULL.
 #' @return Returns the preferred specification parameter estimates for alpha, gamma, sigma, and nu.
+#' @export
 #' @examples
+#' \dontrun{
 #' parame(output.estimates=output.estimates,specification="Type 1",top.trunc=TRUE,calibrate.ALPHA=NULL,calibrate.SIGMA=NULL)
+#' }
 
 parame <- function(output.estimates,specification="Type 1",top.trunc=TRUE,calibrate.ALPHA=NULL,calibrate.SIGMA=NULL){
 

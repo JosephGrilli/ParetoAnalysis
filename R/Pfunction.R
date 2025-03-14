@@ -5,8 +5,11 @@
 #' @param w Data weights used in estimation. Default = 1.
 #' @param r The breakpoint for the Hill estimator. Must be between 1 and n-1.
 #' @return Returns parameter estimates for alpha and sigma (and the minimum and maximum for x) for the truncated generalised pareto.
+#' @export
 #' @examples
+#' \dontrun{
 #' Pfunction(Value,w=Weights,r=length(Value)-1)
+#' }
 
 Pfunction <- function(x,w=1,r=NULL){
   if(is.null(r)){r=length(x)-1}

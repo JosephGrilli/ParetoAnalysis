@@ -45,5 +45,7 @@ Returns data frame of x, w, and id adjusted to match pareto and calibration crit
 Generate new observations from a specified distribution using the randraw sampling approach in Cantarella, Neri & Ranalli, 2021.
 }
 \examples{
+\dontrun{
 calibrateSample(x=Value,w=Weight,id=NA,inputDemoName=c("Gender","Age","Employment"),inputDemo=data[,c("Gender","Age","Employment")],alpha=1.8,gamma=NULL,sigma=NA,specification="Type 1",loopmax=2000)
+}
 }

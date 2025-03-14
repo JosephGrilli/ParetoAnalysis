@@ -45,5 +45,7 @@ Returns data frame with original values, weights, and the new values calculated 
 Generate new observations from a specified distribution using the randraw sampling approach in Zwijnenburg, Grilli & Engelbrecht, 2022.
 }
 \examples{
+\dontrun{
 specification(x=Value,w=Weights,id=hid,m2=m2,popu=popu,alpha=1.8,gamma=100,sigma=NA,Sampling="Inverse",specification="Type 1")
+}
 }

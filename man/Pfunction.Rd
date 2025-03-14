@@ -20,5 +20,7 @@ Returns parameter estimates for alpha and sigma (and the minimum and maximum for
 Returns parameters following the type 1 pareto form, using analytical solution from Aban, Meerschaert & Panorska (2006).
 }
 \examples{
+\dontrun{
 Pfunction(Value,w=Weights,r=length(Value)-1)
+}
 }

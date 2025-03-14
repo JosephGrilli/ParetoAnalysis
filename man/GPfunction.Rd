@@ -22,5 +22,7 @@ Returns parameter estimates for alpha and sigma (and the minimum and maximum for
 Returns estimated parameters following the generalised pareto form.
 }
 \examples{
-GPfunction(Value,Weights,NULL,OptimSearch="Default")
+\dontrun{
+GPfunction(x=Value,w=Weights,gamma=min(Value),OptimSearch="Default")
+}
 }

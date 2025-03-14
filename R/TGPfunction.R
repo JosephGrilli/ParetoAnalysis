@@ -7,8 +7,11 @@
 #' @param nu Sets the upper threshold parameter for the truncated generalised pareto. Default is NULL, setting the threshold to the minimum of x.
 #' @param OptimSearch The algorithm used in the optim function. If "Global", uses SANN in optim function. If "Local", uses L-BFGS-B in optim function. If "Default", uses the form from Zwijnenburg, Grilli & Engelbrecht (2022).
 #' @return Returns parameter estimates for alpha and sigma (and the minimum and maximum for x) for the truncated generalised pareto.
+#' @export
 #' @examples
+#' \dontrun{
 #' TGPfunction(Value,Weights,min(Value),max(Value),OptimSearch="Default")
+#' }
 
 TGPfunction <- function(x,w=1,gamma=NULL,nu=NULL,OptimSearch="Default"){
   if (is.null(gamma)){gamma <- min(x)}

@@ -45,5 +45,7 @@ Returns data frame with values, weights, ids, status as from original data or sy
 Generate new observations from a specified distribution using the synthetic sampling approach in Engel et al. (2022).
 }
 \examples{
+\dontrun{
 synthSample(x=Value,w=Weights,id=hid,m2=m2,popu=popu,alpha=1.8,gamma=100,sigma=NA,Sampling="Inverse",specification="Type 1")
+}
 }
