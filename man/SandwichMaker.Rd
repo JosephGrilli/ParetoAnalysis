@@ -24,5 +24,5 @@ Returns confidence bands for each of the variables, and the variance-covariance 
 Calculates confidence bounds for pseudo-maximum likelihood using sandwich variance-covariance matrix (Geyer (2013): https://www.stat.umn.edu/geyer/5601/notes/sand.pdf).
 }
 \examples{
-SandwichMaker(x=Value, w=Weights, EXPRESS=expression(w(log(1/sigma)-((1+alpha)/alpha)log((sigma+alpha*(x-gamma.gep.hat1))/sigma))), ParamNames=c("alpha", "sigma"),ParamEstimates=c(1.8,1.2))
+SandwichMaker(x=Value, w=Weights, EXPRESS=expression(w(log(1/sigma)-((1+alpha)/alpha)*log((sigma+alpha*(x-gamma.gep.hat1))/sigma))), ParamNames=c("alpha", "sigma"),ParamEstimates=c(1.8,1.2))
 }
