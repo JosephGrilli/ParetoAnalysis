@@ -233,7 +233,10 @@ if(!is.null(seeded)){
   logL1 <- sum(simu$Weights)*log(alpha.pt1.hat2) + sum(simu$Weights)*alpha.pt1.hat2*log(gamma.pt1.hat2) - (alpha.pt1.hat2+1)*sum(simu$Weights*log(simu$Value))
   vermeulen <- lm(log(cumsum(simu$Weights) - 0.5) ~ log(simu$Value))[1]  # Vermeulen (2014) alpha estimate
 
-  Pt1Sandwich <- SandwichMaker(simu$Value, simu$Weights, substitute(expression(w*(log(alpha)-log(x)+alpha*(log(gamma.pt1.hat2)-log(x)))),list(gamma.pt1.hat2 = gamma.pt1.hat2)), c("alpha"),c(alpha.pt1.hat2))
+
+  #Pt1Sandwich <- SandwichMaker(simu$Value, simu$Weights, gamma=gamma.pt1.hat2, nu=NULL, expression(w*(log(alpha)-log(x)+alpha*(log(gamma.pt1.hat2)-log(x)))), c("alpha"),c(alpha.pt1.hat2))
+  Pt1Sandwich <- HSandwichMaker(simu$Value, simu$Weights, gamma=gamma.pt1.hat2, nu=NULL, specification="Type 1", truncated=FALSE, c("alpha"),c(alpha.pt1.hat2))
+
 
   # # Specific bootstrap for Type 1 Analytical solution
   #   n <- length(simu$Value)
@@ -300,7 +303,9 @@ if(!is.null(seeded)){
 
   logL2 <- sum(simu$Weights*(log(1/sigma.gep.hat1) - ((1+alpha.gep.hat1)/alpha.gep.hat1)*log((sigma.gep.hat1 +alpha.gep.hat1*(simu$Value-gamma.gep.hat1))/sigma.gep.hat1)))
 
-  GepSandwich <- SandwichMaker(simu$Value, simu$Weights, expression(w*(log(1/sigma)-((1+alpha)/alpha)*log((sigma+alpha*(x-gamma.gep.hat1))/sigma))), c("alpha", "sigma"),c(alpha.gep.hat1,sigma.gep.hat1))
+  #GepSandwich <- SandwichMaker(simu$Value, simu$Weights, expression(w*(log(1/sigma)-((1+alpha)/alpha)*log((sigma+alpha*(x-gamma.gep.hat1))/sigma))), c("alpha", "sigma"),c(alpha.gep.hat1,sigma.gep.hat1))
+GepSandwich <- HSandwichMaker(simu$Value, simu$Weights,gamma=gamma.gep.hat1,nu=NULL, specification="Generalized", truncated=FALSE, c("alpha", "sigma"),c(alpha.gep.hat1,sigma.gep.hat1))
+
 
   ################################################################################
   ### Generalized Pareto Plots
@@ -343,7 +348,9 @@ if(!is.null(seeded)){
 
   logL3 <- sum(simu$Weights)*log(alpha.tp1.hat2) + sum(simu$Weights)*alpha.tp1.hat2*log(gamma.tp1.hat2) - sum(simu$Weights)*log(1-(gamma.tp1.hat2/nu)^alpha.tp1.hat2) - (alpha.tp1.hat2+1)*sum(simu$Weights*log(simu$Value))
 
-  Tp1Sandwich <- SandwichMaker(simu$Value, simu$Weights, expression(w*(log(alpha)-log(x)+alpha*(log(gamma.pt1.hat2)-log(x))-log(1-(gamma.tp1.hat2/nu)^alpha))), c("alpha"),c(alpha.tp1.hat2))
+  #Tp1Sandwich <- SandwichMaker(simu$Value, simu$Weights, expression(w*(log(alpha)-log(x)+alpha*(log(gamma.pt1.hat2)-log(x))-log(1-(gamma.tp1.hat2/nu)^alpha))), c("alpha"),c(alpha.tp1.hat2))
+Tp1Sandwich <- HSandwichMaker(simu$Value, simu$Weights,gamma=gamma.tp1.hat2,nu=nu, specification="Type 1", truncated=TRUE, c("alpha"),c(alpha.tp1.hat2))
+
 
   ################################################################################
   ### Truncated Type 1 Pareto Plots
@@ -387,7 +394,9 @@ if(!is.null(seeded)){
 
   logL4 <- sum(simu$Weights*(log(1/sigma.gtp.hat1) - ((1+alpha.gtp.hat1)/alpha.gtp.hat1)*log((sigma.gtp.hat1 +alpha.gtp.hat1*(simu$Value-gamma.gtp.hat1))/sigma.gtp.hat1) - log(1-(((sigma.gtp.hat1 + alpha.gtp.hat1*(nu-gamma.gtp.hat1))/sigma.gtp.hat1)^(-1/alpha.gtp.hat1)))))
 
-  GtpSandwich <- SandwichMaker(simu$Value, simu$Weights, expression(w*(log(1/sigma)-((1+alpha)/alpha)*log((sigma+alpha*(x-gamma.gtp.hat1))/sigma) - log(1-(1+alpha*((nu-gamma.gtp.hat1)/sigma)^(-1/alpha))))), c("alpha", "sigma"),c(alpha.gtp.hat1,sigma.gtp.hat1))
+  #GtpSandwich <- SandwichMaker(simu$Value, simu$Weights, expression(w*(log(1/sigma)-((1+alpha)/alpha)*log((sigma+alpha*(x-gamma.gtp.hat1))/sigma) - log(1-(1+alpha*((nu-gamma.gtp.hat1)/sigma)^(-1/alpha))))), c("alpha", "sigma"),c(alpha.gtp.hat1,sigma.gtp.hat1))
+GtpSandwich <- HSandwichMaker(simu$Value, simu$Weights,gamma=gamma.gtp.hat1,nu=nu, specification="Generalized", truncated=TRUE, c("alpha", "sigma"),c(alpha.gtp.hat1,sigma.gtp.hat1))
+
 
   ################################################################################
   ### Truncated Generalized Pareto Plots

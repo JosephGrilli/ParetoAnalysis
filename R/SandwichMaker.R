@@ -3,6 +3,8 @@
 #' @description Calculates confidence bounds for pseudo-maximum likelihood using sandwich variance-covariance matrix (Geyer (2013): https://www.stat.umn.edu/geyer/5601/notes/sand.pdf).
 #' @param x Data values used in parameter estimation.
 #' @param w Data weights used in estimation. Default = 1.
+#' @param gamma Lower threshold parameter for pareto. Default is minimum of x.
+#' @param nu Upper threshold parameter for pareto. Default is maximum of x.
 #' @param EXPRESS expression function giving the log likelihood function. This is differentiated with respect to ParamNames. Example for generalised pareto: expression(w(log(1/sigma) - ((1+alpha)/alpha)log((sigma +alpha(x-100.0129))/sigma)))
 #' @param ParamNames The names of the parameters used in the expression. Example for generalised pareto: c("alpha", "sigma")
 #' @param ParamEstimates Estimates obtained for the parameters. Following ordering of ParamNames
@@ -10,10 +12,10 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' SandwichMaker(x=Value, w=Weights, EXPRESS=expression(w(log(1/sigma)-((1+alpha)/alpha)*log((sigma+alpha*(x-gamma.gep.hat1))/sigma))), ParamNames=c("alpha", "sigma"),ParamEstimates=c(1.8,1.2))
+#' SandwichMaker(x=Value, w=Weights,gamma=NULL,nu=NULL EXPRESS=expression(w(log(1/sigma)-((1+alpha)/alpha)*log((sigma+alpha*(x-gamma.gep.hat1))/sigma))), ParamNames=c("alpha", "sigma"),ParamEstimates=c(1.8,1.2))
 #' }
 
-SandwichMaker <- function(x, w=1, EXPRESS, ParamNames, ParamEstimates){
+SandwichMaker <- function(x, w=1,gamma=NULL,nu=NULL, EXPRESS, ParamNames, ParamEstimates){
   # x: Value inputs
   # w: Weight inputs
   # EXPRESS: Maximum Likelihood Equation, the first derivative of the likelihood function, which is then differentiated with respect to the parameters to construct score and hessian matrices. Enter as expression() input.
@@ -23,6 +25,8 @@ SandwichMaker <- function(x, w=1, EXPRESS, ParamNames, ParamEstimates){
   # ParamEstimates: Estimates for values of parameters which are constructing bands on
   if (exists("ScoreNames")){rm(ScoreNames)}
   if (exists("HessianNames")){rm(HessianNames)}
+  if (is.null(gamma)){gamma <- min(x)}
+  if (is.null(nu)){nu <- max(x)}
 
   # Calculate the score matrix (first derivatives that we are optimizing)
   for (i in ParamNames) {
