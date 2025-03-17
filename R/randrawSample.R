@@ -23,7 +23,6 @@ randrawSample <- function(x,w=1,id=NA,m2=NULL,popu=NULL,alpha=1.8,gamma=100,sigm
   simu <- data.frame(x,w,id)
   colnames(simu) <- c("Value", "Weights", "id")
 
-
   if (is.null(popu)){
     if (specification=="Type 1"){popu <- sum(simu$Weights)/(1-(gamma/max(simu$Value))^alpha)}
     if (specification=="Generalized"){popu <- sum(simu$Weights)/(1-((sigma + alpha*max(simu$Value) - alpha*gamma)/sigma)^(-1/alpha))}
@@ -75,12 +74,13 @@ randrawSample <- function(x,w=1,id=NA,m2=NULL,popu=NULL,alpha=1.8,gamma=100,sigm
   new.obs.2$Prop <- (cumsum(new.obs.2$Weights)/sum(new.obs.2$Weights))
   colnames(newsmat) <- c("value","weight","type","Prop","sumw")
 
-  new.obs.2$nValue <- vapply(new.obs.2$Prop, top_percent_svy, numeric(1), data = newsmat[,c("weight", "value","sumw")])
+  new.obs.2$nValue <- vapply(new.obs.2$Prop, top_percent_svy, numeric(1), value= newsmat[,c("value")], weight= newsmat[,c("weight")])
   new.obs.2$dValue <- c(new.obs.2$nValue[1], diff(new.obs.2$nValue))
   new.obs.2$sValue <- new.obs.2$dValue/new.obs.2$Weights # since is based on share of total weights, need to do here first
 
   # Match new values to old ones and calculate the per weight value
   # If have multiple observations of same value, need to split the total value between the two, then work out the value per weight
+  print("A")
 
   new.obs$sValue <- new.obs.2$sValue[match(new.obs$Value,new.obs.2$Value)]
   new.obs$sValue[is.na(new.obs$sValue)] <- new.obs$Value[is.na(new.obs$sValue)] # LIS is sometimes missing the matches - this is a contingency measure to stop NAs from reducing values. However, never get this error on my end. There should be a successful one-to-many match, but LIS doesn"t?

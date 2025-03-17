@@ -4,7 +4,14 @@
 \alias{TPfunction}
 \title{Estimates truncated type 1 pareto parameters}
 \usage{
-TPfunction(x, w = 1, gamma = NULL, nu = NULL, OptimSearch = "Default")
+TPfunction(
+  x,
+  w = 1,
+  gamma = NULL,
+  nu = NULL,
+  OptimSearch = "Default",
+  r = NULL
+)
 }
 \arguments{
 \item{x}{Data values used in parameter estimation.}
@@ -16,6 +23,8 @@ TPfunction(x, w = 1, gamma = NULL, nu = NULL, OptimSearch = "Default")
 \item{nu}{Sets the upper threshold parameter for the truncated type 1 pareto. Default is NULL, setting the threshold to the minimum of x.}
 
 \item{OptimSearch}{The algorithm used in the optim function. If "Global", uses SANN in optim function. If "Local", uses L-BFGS-B in optim function. If "Default", uses the form from Zwijnenburg, Grilli & Engelbrecht (2022).}
+
+\item{r}{The breakpoint for the Hill estimator. Must be between 1 and n-1. If NULL (default), r=length(x)-1.}
 }
 \value{
 Returns parameter estimates for alpha and sigma (and the minimum and maximum for x) for the truncated type 1 pareto.

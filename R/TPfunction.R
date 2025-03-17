@@ -6,6 +6,7 @@
 #' @param gamma Sets the lower threshold parameter for the type 1 pareto. Default is NULL, setting the threshold to the minimum of x.
 #' @param nu Sets the upper threshold parameter for the truncated type 1 pareto. Default is NULL, setting the threshold to the minimum of x.
 #' @param OptimSearch The algorithm used in the optim function. If "Global", uses SANN in optim function. If "Local", uses L-BFGS-B in optim function. If "Default", uses the form from Zwijnenburg, Grilli & Engelbrecht (2022).
+#' @param r The breakpoint for the Hill estimator. Must be between 1 and n-1. If NULL (default), r=length(x)-1.
 #' @return Returns parameter estimates for alpha and sigma (and the minimum and maximum for x) for the truncated type 1 pareto.
 #' @export
 #' @examples
@@ -13,9 +14,10 @@
 #' TPfunction(Value,Weights,min(Value),max(Value),OptimSearch="Default")
 #' }
 
-TPfunction <- function(x,w=1,gamma=NULL,nu=NULL,OptimSearch="Default"){
+TPfunction <- function(x,w=1,gamma=NULL,nu=NULL,OptimSearch="Default",r=NULL){
   if (is.null(gamma)){gamma <- min(x)}
   if (is.null(nu)){nu <- max(x)}
+  if (is.null(r)){r <- length(x)-1}
   N <- sum(w)
   # Truncated Pareto Type 1 from Aban, Meerschaert & Panorska (2006), known thresholds
   LL <- function(param, alpha){

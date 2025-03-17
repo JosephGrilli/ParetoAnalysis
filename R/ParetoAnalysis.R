@@ -41,12 +41,12 @@
 #' @param simulatePopulation: If TRUE (default), households are simulated in the estimated distribution. If FALSE, code ends with Pareto estimates output.
 
 #' @return Returns estimated values, variances, goodness of fit and information criterion for pareto model. If simulatePopulation=TRUE, also returns estimated data sampled from pareto using method. If graphs=TRUE, also provides test graphical output.
-#' 
+#'
 #' @import lmtest
 #' @import ggplot2
 #' @import simPop
 #' @export
-#' 
+#'
 #' @examples
 #' \dontrun{
 #' ParetoAnalysis(inputValues=Value,inputWeights=Weight,id=hid)
@@ -116,7 +116,7 @@ ParetoAnalysis <- function(inputValues = NULL, inputWeights = NULL, inputid = NU
    ################################################################################
   ### Data Section
   ################################################################################
-  
+
 if(!is.null(seeded)){
     set.seed(seeded)
   }
@@ -326,19 +326,17 @@ GepSandwich <- HSandwichMaker(simu$Value, simu$Weights,gamma=gamma.gep.hat1,nu=N
   }
 
 
-
   ################################################################################
   ### Truncated Type 1 Pareto
   ################################################################################
 
-  res <- TPfunction(simu$Value,simu$Weights,min(simu$Value),max(simu$Value),OptimSearch=OptimSearch)
+  res <- TPfunction(simu$Value,simu$Weights,min(simu$Value),max(simu$Value),OptimSearch=OptimSearch,r=r)
 
   alpha.tp1.hat2 <- res["alpha"]
   gamma.tp1.hat2 <- res["gamma"]
   nu <- res["nu"]
 
-  #C <- (r/n)*((simu$Value[r+1])^alpha.pt1.hat2)
-  C <- ((simu$Value)^alpha.pt1.hat2)
+  C <- (r/n)*((simu$Value[r+1])^alpha.pt1.hat2)
   p1 <- exp(-n*C*(nu^(-alpha.pt1.hat2)))
   if (p1<= ttp) {
     print("Null hypothesis rejected, Truncated Pareto type 1 in preferred to Untruncated Pareto Type 1.")
@@ -526,7 +524,6 @@ GtpSandwich <- HSandwichMaker(simu$Value, simu$Weights,gamma=gamma.gtp.hat1,nu=n
 
   print(paste0("Tail Totals before adjustment: Total number of households: ", sum(simu$Weights[simu$Value>=gamma], na.rm=TRUE), "; Total Value: ", sum(simu$Weights[simu$Value>=gamma]*simu$Value[simu$Value>=gamma], na.rm=TRUE)))
   print(paste0("Tail Totals before adjustment: Total number of observations: ", length(simu$Weights[simu$Value>=gamma])))
-
 
   res <- estimatedParetoPopFunction(x=simu$Value,w=simu$Weights,alpha=alpha,gamma=gamma,sigma=sigma,specification=specification)
   robust.population <- res[[1]]

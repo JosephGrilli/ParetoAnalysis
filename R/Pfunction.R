@@ -3,7 +3,7 @@
 #' @description Returns parameters following the type 1 pareto form, using analytical solution from Aban, Meerschaert & Panorska (2006).
 #' @param x Data values used in parameter estimation.
 #' @param w Data weights used in estimation. Default = 1.
-#' @param r The breakpoint for the Hill estimator. Must be between 1 and n-1.
+#' @param r The breakpoint for the Hill estimator. Must be between 1 and n-1. If NULL (default), r=length(x)-1.
 #' @return Returns parameter estimates for alpha and sigma (and the minimum and maximum for x) for the truncated generalised pareto.
 #' @export
 #' @examples

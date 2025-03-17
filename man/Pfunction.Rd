@@ -11,7 +11,7 @@ Pfunction(x, w = 1, r = NULL)
 
 \item{w}{Data weights used in estimation. Default = 1.}
 
-\item{r}{The breakpoint for the Hill estimator. Must be between 1 and n-1.}
+\item{r}{The breakpoint for the Hill estimator. Must be between 1 and n-1. If NULL (default), r=length(x)-1.}
 }
 \value{
 Returns parameter estimates for alpha and sigma (and the minimum and maximum for x) for the truncated generalised pareto.
