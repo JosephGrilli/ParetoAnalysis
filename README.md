@@ -4,7 +4,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of ParetoGrilli is to provide a download source for the pareto analysis tool developed for the centralised approach.
+The goal of ParetoGrilli is to provide a download source for the pareto analysis tool developed for the centralised approach. The methodology is described in [Zwijnenburg, Grilli & Engelbrecht (2022)](https://iariw.org/wp-content/uploads/2022/07/Jorret-Joseph-Pao-IARIW-2022.pdf) and [Zwijnenburg & Grilli (2024)](https://iariw.org/wp-content/uploads/2024/08/Draft_1_1_JZ3.pdf)
 
 ## Installation
 
