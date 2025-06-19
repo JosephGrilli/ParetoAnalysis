@@ -59,6 +59,12 @@ library(ParetoGrilli)
 ParetoAnalysis(inputValues=Value,inputWeights=Weight,id=hid,x_0="top5",method="Synths", graphs=TRUE, ksp=0.05, ttp = 0.05, HillEstimator=1, OptimSearch="Local", Sampling="Inverse", model.selection = "AIC", simulatePopulation = FALSE)
 ```
 
+If the pareto function and parameters have been estimated previously or outside the code, these can be implemented to make the adjustments on the data according to these parameters (noting that the estimation will still be run on the data prior to applying them):
+``` r
+library(ParetoGrilli)
+ParetoAnalysis(inputValues=Value,inputWeights=Weight,id=hid,x_0="top10",method="Synths", graphs=TRUE, pre.specification="Generalized", pre.top.trunc=TRUE, calibrate.ALPHA=1.8, calibrate.SIGMA=100)
+```
+
 The full set of parameters, descriptions, and any relevent explanations is included in the code, but also printed below for completeness:
 ```r
 inputValues # Vector (nx1) of values held by household.
