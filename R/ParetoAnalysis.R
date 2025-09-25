@@ -1,6 +1,7 @@
 #' Runs centralised apprach (Zwijnenburg, Grilli & Engelbrecht, 2022) Pareto code
 #'
 #' @description Estimates pareto values from input data (or simulated data) with option to simulate data from estimated pareto using multiple approaches.
+#' @param x Data values used in parameter estimation.
 #' @param inputValues Vector (nx1) of values held by household
 #' @param inputWeights: Vector (nx1) of weights of households
 #' @param inputid: Vector (nx1) of ids of households
@@ -41,22 +42,53 @@
 #' @param simulatePopulation: If TRUE (default), households are simulated in the estimated distribution. If FALSE, code ends with Pareto estimates output.
 
 #' @return Returns estimated values, variances, goodness of fit and information criterion for pareto model. If simulatePopulation=TRUE, also returns estimated data sampled from pareto using method. If graphs=TRUE, also provides test graphical output.
-#'
-#' @import lmtest
-#' @import ggplot2
-#' @import simPop
-#' @export
-#'
 #' @examples
-#' \dontrun{
 #' ParetoAnalysis(inputValues=Value,inputWeights=Weight,id=hid)
 #' ParetoAnalysis(type="Type 1",trun = "Truncated")
 #' ParetoAnalysis(x_0 = 100, type="Type 1",trun = "Truncated", simnum=10000, upperT = 0.85, lowerT=0.15,sim.ALPHA=1.8,sim.SIGMA=1.2)
 #' ParetoAnalysis(inputValues=Value,inputWeights=Weight,id=hid, pre.specification="Generalized", pre.top.trunc="TRUE", calibrate.ALPHA=1.8,calibrate.SIGMA=1.2)
 #' ParetoAnalysis(inputValues=Value,inputWeights=Weight,id=hid,x_0="top5",method="Synths", graphs=TRUE, ksp=0.05, ttp = 0.05, HillEstimator=1, OptimSearch="Local", Sampling="Inverse", model.selection = "BIC", simulatePopulation = FALSE)
-#' }
 
 ParetoAnalysis <- function(inputValues = NULL, inputWeights = NULL, inputid = NULL, inputDemo = NULL, inputDemoName = NULL, x_0 = NULL, type, trun = "Untruncated", method = "RanDraw", simnum=1000, pre.specification = NULL, pre.top.trunc = NULL, graphs = FALSE, ksp = 0.01, ttp = 0.1, upperT = 0.85, lowerT=0.15, sim.ALPHA = 1.8, sim.SIGMA = 1.2, loopmax = 2000, calibrate.ALPHA=NULL, calibrate.SIGMA=NULL, HillEstimator=NULL, OptimSearch="Default", seeded=NULL, Sampling="Deterministic", model.selection = c("Arms", "Loglikelihood", "AIC", "BIC"), simulatePopulation = TRUE) {
+  # inputValues: Vector (nx1) of values held by household
+  # inputWeights: Vector (nx1) of weights of households
+  # inputid: Vector (nx1) of ids of households
+  # inputDemo: Matrix (nxm) of demographic variables of households
+  # inputDemoName: Vector(1xm) of names of demographic variables
+  # x_0: Threshold value (numeric) or strings "top10", "top5", "top1" to select top tail of input data. Any string input takes form "top##", with the number ## being extracted.
+  # type: Simulation Option for Pareto Type 1 ("Type 1"), Generalized Pareto ("Generalized"), or EU-SILC ("eusilc") data
+  # trun: Simulation Option for Untruncated ("Untruncated"), Truncated ("Truncated"), or randomly truncated ("randTruncated") data.
+  #   Untruncated: Leaves simulated data as is
+  #   Truncated: Truncates data between 15% and 85% values
+  #   randTruncated: Truncates between a lower (0,0.5) and upper (lower, 1) proportions
+  # method: Draws from estimated Pareto distribution using added rich households ("Synths"), adjusted weights ("Calibrate"), or adjusted values ("ranDraw")
+  #   Synths: Draws households from space above maximum survey value, calculated estimated population of missing area.
+  #   Calibrate: Iteratively draw weights that match the empirical CDF to the theoretical CDF while also retaining demographic totals
+  #   RanDraw: Draw sum of weights in total values from estimated distribution, order, and allocate to existing households
+  #   None: Skips the correction stage and only runs as an estimation
+  # simnum: Simulation Option for number of observations to be drawn from Pareto Type 1 or Generalized Pareto distributions
+  # pre.specification: Adjustment Option to overwrite goodness-of-fit results and select distribution type ("Type 1" or "Generalized")
+  # pre.top.trunc: Adjustment Option to overwrite truncation test and select if truncated (TRUE or FALSE)
+  # graphs: TRUE/FALSE option to produce graphs
+  # ksp: Kolomogorov-Smirnov test statistic p-value level of significance to reject the null hypothesis that the data is drawn from the distribution
+  # ttp: Truncation test statistics p-value level of significance to reject null hypothesis that the distribution is not truncated
+  # upperT: Option for simulated Truncated ("Truncated") data to vary the percentage truncated at top of the distribution
+  # lowerT: Option for simulated Truncated ("Truncated") data to vary the percentage truncated at bottom of the distribution
+  # sim.ALPHA: Option for simulated  data to vary the Pareto Shape Parameter
+  # sim.SIGMA: Option for simulated  data to vary the Pareto Scale Parameter
+  # loopmax: Maximum number of iterations in the Calibrate iterative step
+  # calibrate.ALPHA: Option for setting Pareto Shape Parameter when using pre.specification
+  # calibrate.SIGMA: Option for setting Pareto Scale Parameter when using pre.specification
+  # HillEstimator: Option for setting Hill Estimator share [0,1] of data used in estimating shape parameters. If NULL, it is calculated as either 0.5, or optimised if sample is small enough. Default 1 (i.e. no Hill Estimator adjustment)
+  # OptimSearch: Sets the search style used for likelihood optimisation. "Default" uses existing options, or can set all to "Global", "Local", or "Both" (runs global then local).
+  # seeded: Sets the seed to have fixed random draws (default: 20200916). Can therefore also use to alter seed. If set to NULL, then seed is not set (so can be randomised outside of the code, or doesnt overwrite existing seed setting.)
+  # Sampling: Method of drawing new observations in the tail. Default option is "Deterministic" (calculate value from CDF where next observation would occur). Alternative is "Inverse" (make m2 random draws in the uncovered region of the tail)
+  # model.selection: Method for choosing the winning model. Default option is "Arms", which is a logical decision tree to choose the smallest model, favouring trunction, from those retained in KS test.
+  #                  Alternative methods: "Loglikelihood", "AIC", "BIC"; will choose based on the favoured model by these metrics conditional on a specified model being chosen (i.e. it lacks the capabilities
+  #                  to select no model). Generally, BIC is the preferred of these as it heavily penalises redundant parameters and so will better delineate whether a truncation parameter is needed (the
+  #                  penalty increases from 2 to log(N), which is larger for N>7)
+  # simulatePopulation: If TRUE (default), households are simulated in the estimated distribution. If FALSE, code ends with Pareto estimates output.
+
 
   ################################################################################
   ### Option block
@@ -76,7 +108,7 @@ ParetoAnalysis <- function(inputValues = NULL, inputWeights = NULL, inputid = NU
     simu$Weights <- if(!is.null(inputWeights)){
       inputWeights} else {1} # Setting Weights to inputWeights if available, else 1
     simu$id <- if(!is.null(inputid)){
-      inputid} else {NA} # Setting id to inputid if available, else NA
+      inputid} else {seq(1:length(inputValues))} # Setting id to inputid if available, else NA
 
     if (!is.null(inputDemo)) {
       simu <- cbind(simu, inputDemo)
@@ -113,11 +145,21 @@ ParetoAnalysis <- function(inputValues = NULL, inputWeights = NULL, inputid = NU
     x_0 <- 100 # Setting x_0 to 100 if it is NULL
   }
 
-   ################################################################################
+  # Options: Set to a value or some function of the input data
+
+  required_packages <- c("lmtest")
+  if (graphs==TRUE) {required_packages <- c("ggplot2",required_packages)}
+  if (method=="Calibrate") {required_packages <- c("simPop",required_packages)}
+  new_packages <- required_packages[!(required_packages %in% installed.packages())]
+  if (length(new_packages)) { install.packages(new_packages, dependencies = TRUE, quiet = TRUE)}
+  sapply(required_packages, suppressWarnings(suppressMessages(require)), quietly = TRUE, character.only = TRUE)
+
+
+  ################################################################################
   ### Data Section
   ################################################################################
 
-if(!is.null(seeded)){
+  if(!is.null(seeded)){
     set.seed(seeded)
   }
 
@@ -133,6 +175,7 @@ if(!is.null(seeded)){
       simu <- as.data.frame( x_0 + (sigma/alpha)*((1-y)^-alpha) - (sigma/alpha) )
       colnames(simu) <- "Value"
       simu$Weights <- 1
+      simu$id <- seq(1:length(simu$Value))
     }
 
     if (type == "Type 1") {
@@ -141,6 +184,7 @@ if(!is.null(seeded)){
       simu <- as.data.frame(x_0*(1-y)^(-1/alpha))
       colnames(simu) <- "Value"
       simu$Weights <- 1
+      simu$id <- seq(1:length(simu$Value))
     }
 
     if (type == "eusilc"){
@@ -151,8 +195,8 @@ if(!is.null(seeded)){
       sapply(required_packages, suppressWarnings(suppressMessages(require)), quietly = TRUE, character.only = TRUE)
 
       data(eusilc)
-      simu <- data.frame(eusilc$eqIncome, eusilc$db090, eusilc$rb090, eusilc$hsize, eusilc$age, eusilc$pl030)
-      colnames(simu) <- c("Value", "Weights", "gender", "hsize", "age.group", "economic.status")
+      simu <- data.frame(eusilc$eqIncome, eusilc$db090, eusilc$rb090, eusilc$hsize, eusilc$age, eusilc$pl030, eusilc$db030)
+      colnames(simu) <- c("Value", "Weights", "gender", "hsize", "age.group", "economic.status", "id")
     }
 
     # Order data
@@ -189,7 +233,7 @@ if(!is.null(seeded)){
       #upper <- 0.85*nrow(simu)
       simu <- simu[upper:lower,]
     }
-    simu$id <- NA
+    
   }
   simu <- simu[simu$Value>=x_0,] # The Pareto distribution support is [x_0, infty), with x_0>0
 
@@ -225,7 +269,7 @@ if(!is.null(seeded)){
   } else {r <- n*HillEstimator}
   r <- min(r, n-1) # Condition that Hill Estimator must remove the smallest observation so that gamma = value[r+1] is defined. Alternatively, could skip the Hill Estimator or add an extra "gamma" observation at value[r+1] to replicate non-adjusted form.
 
-  res <- Pfunction(x=simu$Value,w=simu$Weights,r=r)
+  res <- Pfunction(x=simu$Value,w=simu$Weights,r=n-1)
 
   alpha.pt1.hat2 <- res["alpha"]
   gamma.pt1.hat2 <- res["gamma"]
@@ -233,10 +277,7 @@ if(!is.null(seeded)){
   logL1 <- sum(simu$Weights)*log(alpha.pt1.hat2) + sum(simu$Weights)*alpha.pt1.hat2*log(gamma.pt1.hat2) - (alpha.pt1.hat2+1)*sum(simu$Weights*log(simu$Value))
   vermeulen <- lm(log(cumsum(simu$Weights) - 0.5) ~ log(simu$Value))[1]  # Vermeulen (2014) alpha estimate
 
-
-  #Pt1Sandwich <- SandwichMaker(simu$Value, simu$Weights, gamma=gamma.pt1.hat2, nu=NULL, expression(w*(log(alpha)-log(x)+alpha*(log(gamma.pt1.hat2)-log(x)))), c("alpha"),c(alpha.pt1.hat2))
-  Pt1Sandwich <- HSandwichMaker(simu$Value, simu$Weights, gamma=gamma.pt1.hat2, nu=NULL, specification="Type 1", truncated=FALSE, c("alpha"),c(alpha.pt1.hat2))
-
+  Pt1Sandwich <- SandwichMaker(simu$Value, simu$Weights, expression(w*(log(alpha)-log(x)+alpha*(log(gamma.pt1.hat2)-log(x)))), c("alpha"),c(alpha.pt1.hat2))
 
   # # Specific bootstrap for Type 1 Analytical solution
   #   n <- length(simu$Value)
@@ -303,9 +344,7 @@ if(!is.null(seeded)){
 
   logL2 <- sum(simu$Weights*(log(1/sigma.gep.hat1) - ((1+alpha.gep.hat1)/alpha.gep.hat1)*log((sigma.gep.hat1 +alpha.gep.hat1*(simu$Value-gamma.gep.hat1))/sigma.gep.hat1)))
 
-  #GepSandwich <- SandwichMaker(simu$Value, simu$Weights, expression(w*(log(1/sigma)-((1+alpha)/alpha)*log((sigma+alpha*(x-gamma.gep.hat1))/sigma))), c("alpha", "sigma"),c(alpha.gep.hat1,sigma.gep.hat1))
-GepSandwich <- HSandwichMaker(simu$Value, simu$Weights,gamma=gamma.gep.hat1,nu=NULL, specification="Generalized", truncated=FALSE, c("alpha", "sigma"),c(alpha.gep.hat1,sigma.gep.hat1))
-
+  GepSandwich <- SandwichMaker(simu$Value, simu$Weights, expression(w*(log(1/sigma)-((1+alpha)/alpha)*log((sigma+alpha*(x-gamma.gep.hat1))/sigma))), c("alpha", "sigma"),c(alpha.gep.hat1,sigma.gep.hat1))
 
   ################################################################################
   ### Generalized Pareto Plots
@@ -326,11 +365,12 @@ GepSandwich <- HSandwichMaker(simu$Value, simu$Weights,gamma=gamma.gep.hat1,nu=N
   }
 
 
+
   ################################################################################
   ### Truncated Type 1 Pareto
   ################################################################################
 
-  res <- TPfunction(simu$Value,simu$Weights,min(simu$Value),max(simu$Value),OptimSearch=OptimSearch,r=r)
+  res <- TPfunction(simu$Value,simu$Weights,min(simu$Value),max(simu$Value),OptimSearch=OptimSearch)
 
   alpha.tp1.hat2 <- res["alpha"]
   gamma.tp1.hat2 <- res["gamma"]
@@ -347,9 +387,7 @@ GepSandwich <- HSandwichMaker(simu$Value, simu$Weights,gamma=gamma.gep.hat1,nu=N
 
   logL3 <- sum(simu$Weights)*log(alpha.tp1.hat2) + sum(simu$Weights)*alpha.tp1.hat2*log(gamma.tp1.hat2) - sum(simu$Weights)*log(1-(gamma.tp1.hat2/nu)^alpha.tp1.hat2) - (alpha.tp1.hat2+1)*sum(simu$Weights*log(simu$Value))
 
-  #Tp1Sandwich <- SandwichMaker(simu$Value, simu$Weights, expression(w*(log(alpha)-log(x)+alpha*(log(gamma.pt1.hat2)-log(x))-log(1-(gamma.tp1.hat2/nu)^alpha))), c("alpha"),c(alpha.tp1.hat2))
-Tp1Sandwich <- HSandwichMaker(simu$Value, simu$Weights,gamma=gamma.tp1.hat2,nu=nu, specification="Type 1", truncated=TRUE, c("alpha"),c(alpha.tp1.hat2))
-
+  Tp1Sandwich <- SandwichMaker(simu$Value, simu$Weights, expression(w*(log(alpha)-log(x)+alpha*(log(gamma.pt1.hat2)-log(x))-log(1-(gamma.tp1.hat2/nu)^alpha))), c("alpha"),c(alpha.tp1.hat2))
 
   ################################################################################
   ### Truncated Type 1 Pareto Plots
@@ -393,9 +431,7 @@ Tp1Sandwich <- HSandwichMaker(simu$Value, simu$Weights,gamma=gamma.tp1.hat2,nu=n
 
   logL4 <- sum(simu$Weights*(log(1/sigma.gtp.hat1) - ((1+alpha.gtp.hat1)/alpha.gtp.hat1)*log((sigma.gtp.hat1 +alpha.gtp.hat1*(simu$Value-gamma.gtp.hat1))/sigma.gtp.hat1) - log(1-(((sigma.gtp.hat1 + alpha.gtp.hat1*(nu-gamma.gtp.hat1))/sigma.gtp.hat1)^(-1/alpha.gtp.hat1)))))
 
-  #GtpSandwich <- SandwichMaker(simu$Value, simu$Weights, expression(w*(log(1/sigma)-((1+alpha)/alpha)*log((sigma+alpha*(x-gamma.gtp.hat1))/sigma) - log(1-(1+alpha*((nu-gamma.gtp.hat1)/sigma)^(-1/alpha))))), c("alpha", "sigma"),c(alpha.gtp.hat1,sigma.gtp.hat1))
-GtpSandwich <- HSandwichMaker(simu$Value, simu$Weights,gamma=gamma.gtp.hat1,nu=nu, specification="Generalized", truncated=TRUE, c("alpha", "sigma"),c(alpha.gtp.hat1,sigma.gtp.hat1))
-
+  GtpSandwich <- SandwichMaker(simu$Value, simu$Weights, expression(w*(log(1/sigma)-((1+alpha)/alpha)*log((sigma+alpha*(x-gamma.gtp.hat1))/sigma) - log(1-(1+alpha*((nu-gamma.gtp.hat1)/sigma)^(-1/alpha))))), c("alpha", "sigma"),c(alpha.gtp.hat1,sigma.gtp.hat1))
 
   ################################################################################
   ### Truncated Generalized Pareto Plots
@@ -524,6 +560,7 @@ GtpSandwich <- HSandwichMaker(simu$Value, simu$Weights,gamma=gamma.gtp.hat1,nu=n
 
   print(paste0("Tail Totals before adjustment: Total number of households: ", sum(simu$Weights[simu$Value>=gamma], na.rm=TRUE), "; Total Value: ", sum(simu$Weights[simu$Value>=gamma]*simu$Value[simu$Value>=gamma], na.rm=TRUE)))
   print(paste0("Tail Totals before adjustment: Total number of observations: ", length(simu$Weights[simu$Value>=gamma])))
+
 
   res <- estimatedParetoPopFunction(x=simu$Value,w=simu$Weights,alpha=alpha,gamma=gamma,sigma=sigma,specification=specification)
   robust.population <- res[[1]]
