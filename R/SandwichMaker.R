@@ -11,7 +11,7 @@
 #' @examples
 #' SandwichMaker(x=Value, w=Weights, EXPRESS=expression(w(log(1/sigma)-((1+alpha)/alpha)log((sigma+alpha*(x-gamma.gep.hat1))/sigma))), ParamNames=c("alpha", "sigma"),ParamEstimates=c(1.8,1.2),gamma=100)
 
-SandwichMaker <- function(x, w=1, EXPRESS, ParamNames, ParamEstimates){
+SandwichMaker <- function(x, w=1, EXPRESS, ParamNames, ParamEstimates,gamma=100){
   # x: Value inputs
   # w: Weight inputs
   # EXPRESS: Maximum Likelihood Equation, the first derivative of the likelihood function, which is then differentiated with respect to the parameters to construct score and hessian matrices. Enter as expression() input.
