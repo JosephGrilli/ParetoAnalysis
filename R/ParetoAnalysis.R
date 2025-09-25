@@ -277,7 +277,7 @@ ParetoAnalysis <- function(inputValues = NULL, inputWeights = NULL, inputid = NU
   logL1 <- sum(simu$Weights)*log(alpha.pt1.hat2) + sum(simu$Weights)*alpha.pt1.hat2*log(gamma.pt1.hat2) - (alpha.pt1.hat2+1)*sum(simu$Weights*log(simu$Value))
   vermeulen <- lm(log(cumsum(simu$Weights) - 0.5) ~ log(simu$Value))[1]  # Vermeulen (2014) alpha estimate
 
-  Pt1Sandwich <- SandwichMaker(x=simu$Value, w=simu$Weights, EXPRESS=expression(w*(log(alpha)-log(x)+alpha*(log(gamma)-log(x)))), ParamNames=c("alpha"),ParamEstimates=c(alpha.pt1.hat2),gamma=gamma.pt1.hat2)
+  Pt1Sandwich <- SandwichMaker(x=simu$Value, w=simu$Weights, EXPRESS=expression(w*(log(alpha)-log(x)+alpha*(log(gamma)-log(x)))), ParamNames=c("alpha"),ParamEstimates=c(alpha.pt1.hat2),gamma=gamma.pt1.hat2,Nu=NA)
 
   # # Specific bootstrap for Type 1 Analytical solution
   #   n <- length(simu$Value)
@@ -344,7 +344,7 @@ ParetoAnalysis <- function(inputValues = NULL, inputWeights = NULL, inputid = NU
 
   logL2 <- sum(simu$Weights*(log(1/sigma.gep.hat1) - ((1+alpha.gep.hat1)/alpha.gep.hat1)*log((sigma.gep.hat1 +alpha.gep.hat1*(simu$Value-gamma.gep.hat1))/sigma.gep.hat1)))
 
-  GepSandwich <- SandwichMaker(x=simu$Value, w=simu$Weights, EXPRESS=expression(w*(log(1/sigma)-((1+alpha)/alpha)*log((sigma+alpha*(x-gamma))/sigma))), ParamNames=c("alpha", "sigma"),ParamEstimates=c(alpha.gep.hat1,sigma.gep.hat1),gamma=gamma.gep.hat1)
+  GepSandwich <- SandwichMaker(x=simu$Value, w=simu$Weights, EXPRESS=expression(w*(log(1/sigma)-((1+alpha)/alpha)*log((sigma+alpha*(x-gamma))/sigma))), ParamNames=c("alpha", "sigma"),ParamEstimates=c(alpha.gep.hat1,sigma.gep.hat1),gamma=gamma.gep.hat1,Nu=NA)
 
   ################################################################################
   ### Generalized Pareto Plots
@@ -387,7 +387,7 @@ ParetoAnalysis <- function(inputValues = NULL, inputWeights = NULL, inputid = NU
 
   logL3 <- sum(simu$Weights)*log(alpha.tp1.hat2) + sum(simu$Weights)*alpha.tp1.hat2*log(gamma.tp1.hat2) - sum(simu$Weights)*log(1-(gamma.tp1.hat2/nu)^alpha.tp1.hat2) - (alpha.tp1.hat2+1)*sum(simu$Weights*log(simu$Value))
 
-  Tp1Sandwich <- SandwichMaker(x=simu$Value, w=simu$Weights, EXPRESS=expression(w*(log(alpha)-log(x)+alpha*(log(gamma)-log(x))-log(1-(gamma/nu)^alpha))), ParamNames=c("alpha"),ParamEstimates=c(alpha.tp1.hat2),gamma=gamma.pt1.hat2)
+  Tp1Sandwich <- SandwichMaker(x=simu$Value, w=simu$Weights, EXPRESS=expression(w*(log(alpha)-log(x)+alpha*(log(gamma)-log(x))-log(1-(gamma/nu)^alpha))), ParamNames=c("alpha"),ParamEstimates=c(alpha.tp1.hat2),gamma=gamma.pt1.hat2,Nu=nu)
 
   ################################################################################
   ### Truncated Type 1 Pareto Plots
@@ -431,7 +431,7 @@ ParetoAnalysis <- function(inputValues = NULL, inputWeights = NULL, inputid = NU
 
   logL4 <- sum(simu$Weights*(log(1/sigma.gtp.hat1) - ((1+alpha.gtp.hat1)/alpha.gtp.hat1)*log((sigma.gtp.hat1 +alpha.gtp.hat1*(simu$Value-gamma.gtp.hat1))/sigma.gtp.hat1) - log(1-(((sigma.gtp.hat1 + alpha.gtp.hat1*(nu-gamma.gtp.hat1))/sigma.gtp.hat1)^(-1/alpha.gtp.hat1)))))
 
-  GtpSandwich <- SandwichMaker(x=simu$Value, w=simu$Weights, EXPRESS=expression(w*(log(1/sigma)-((1+alpha)/alpha)*log((sigma+alpha*(x-gamma))/sigma) - log(1-(1+alpha*((nu-gamma)/sigma)^(-1/alpha))))), ParamNames=c("alpha", "sigma"),ParamEstimates=c(alpha.gtp.hat1,sigma.gtp.hat1),gamma=gamma.gtp.hat1)
+  GtpSandwich <- SandwichMaker(x=simu$Value, w=simu$Weights, EXPRESS=expression(w*(log(1/sigma)-((1+alpha)/alpha)*log((sigma+alpha*(x-gamma))/sigma) - log(1-(1+alpha*((nu-gamma)/sigma)^(-1/alpha))))), ParamNames=c("alpha", "sigma"),ParamEstimates=c(alpha.gtp.hat1,sigma.gtp.hat1),gamma=gamma.gtp.hat1,Nu=nu)
 
   ################################################################################
   ### Truncated Generalized Pareto Plots

@@ -7,17 +7,19 @@
 #' @param ParamNames The names of the parameters used in the expression. Example for generalised pareto: c("alpha", "sigma")
 #' @param ParamEstimates Estimates obtained for the parameters. Following ordering of ParamNames
 #' @param gamma The lower threshold for the pareto function. Entered into the function so expression can be evaluated.
+#' @param Nu The upper threshold for the pareto function. Entered into the function so expression can be evaluated.
 #' @return Returns confidence bands for each of the variables, and the variance-covariance matrix
 #' @examples
-#' SandwichMaker(x=Value, w=Weights, EXPRESS=expression(w(log(1/sigma)-((1+alpha)/alpha)log((sigma+alpha*(x-gamma.gep.hat1))/sigma))), ParamNames=c("alpha", "sigma"),ParamEstimates=c(1.8,1.2),gamma=100)
+#' SandwichMaker(x=Value, w=Weights, EXPRESS=expression(w(log(1/sigma)-((1+alpha)/alpha)log((sigma+alpha*(x-gamma.gep.hat1))/sigma))), ParamNames=c("alpha", "sigma"),ParamEstimates=c(1.8,1.2),gamma=100,Nu=1000000)
 
-SandwichMaker <- function(x, w=1, EXPRESS, ParamNames, ParamEstimates,gamma=100){
+SandwichMaker <- function(x, w=1, EXPRESS, ParamNames, ParamEstimates,gamma=100,Nu=NA){
   # x: Value inputs
   # w: Weight inputs
   # EXPRESS: Maximum Likelihood Equation, the first derivative of the likelihood function, which is then differentiated with respect to the parameters to construct score and hessian matrices. Enter as expression() input.
   #     EXPRESS example: EXPRESS <- expression(w*(log(1/sigma) - ((1+alpha)/alpha)*log((sigma +alpha*(x-100.0129))/sigma))) # Generalised Pareto
   # ParamNames: Vector of strings of names of parameters in EXPRESS, that function is differentiated with respect to.
   #     ParamNames example: ParamNames <- c("alpha", "sigma")
+if (is.na(Nu)){nu=max(x)}
   # ParamEstimates: Estimates for values of parameters which are constructing bands on
   if (exists("ScoreNames")){rm(ScoreNames)}
   if (exists("HessianNames")){rm(HessianNames)}
